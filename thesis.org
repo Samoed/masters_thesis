@@ -1,0 +1,35 @@
+#+STARTUP: latexpreview
+#+TITLE: Разработка фреймфорка по автоматическому определению интентов
+#+AUTHOR: Соломатин Роман Игоревич
+#+LANGUAGE: ru
+#+cite_export: biblatex
+#+COMMENT: ':t for https://stackoverflow.com/questions/15097114/how-to-get-smart-quotes-on-org-mode-export
+#+LATEX_CLASS: ITMOMasters
+#+LATEX_CLASS_OPTIONS: [14pt,a4paper,oneside,openany]
+#+LATEX_HEADER: \usepackage[T2A]{fontenc}
+#+LATEX_HEADER_EXTRA: \include{config}
+#+LATEX_HEADER_EXTRA: \renewcommand{\contentsname}{Содержание}
+#+OPTIONS: date:nil
+
+* Введение
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+LATEX: \addcontentsline{toc}{chapter}{Введение}
+
+* Глава 1
+[cite:@vaswani_attention_2017]
+** test 2
+*** test 3
+
+* Заключение
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+print_bibliography: :title СПИСОК\spaceИСПОЛЬЗОВАНЫХ\spaceИСТОЧНИКОВ
+# Local Variables:
+# org-latex-title-command: nil
+# org-latex-packages-alist: nil
+# org-latex-listings: t
+# org-latex-toc-command: "\\MyTOC\n\n"
+# End:

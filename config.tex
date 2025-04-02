@@ -1,0 +1,155 @@
+% Настройка полей (левое: 30 мм, правое: 15 мм (можно 10 мм), верхнее: 20 мм, нижнее: 20 мм)
+\usepackage[a4paper,top=20mm,bottom=20mm,left=30mm,right=15mm]{geometry}
+% Межстрочный интервал 1.5 (14 пт рекомендуемый размер шрифта, можно задавать через документ или в настройках Overleaf)
+\usepackage{setspace}
+\onehalfspacing
+
+% русские буквы
+\usepackage[utf8]{inputenc}
+\usepackage[T2A]{fontenc}
+\usepackage[main=russian,english]{babel}
+
+\newcommand{\MyTOC}{%
+  \chapter*{СОДЕРЖАНИЕ}%
+  \markboth{СОДЕРЖАНИЕ}{}%
+  \vspace{-3.5cm}%
+  {%
+    \renewcommand{\contentsname}{}%
+    \tableofcontents
+  }%
+}
+
+% Абзацный отступ 1.25 см
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{0pt}
+
+% Нумерация страниц: арабскими цифрами, по центру нижней части
+\usepackage{fancyhdr}
+\pagestyle{plain}
+\fancyhf{}
+\cfoot{\thepage}
+
+% Настройка заголовков через titlesec
+\usepackage{titlesec}
+% Заголовки глав: прописными буквами, полужирно, по центру, без точки в конце
+\titleformat{\chapter}[hang]{\bfseries\Large\centering}{\thechapter}{1em}{}
+% Заголовки разделов и подразделов – с абзацным отступом
+\titleformat{\section}[hang]{\bfseries\large}{\thesection}{1em}{}
+\titleformat{\subsection}[hang]{\bfseries}{\thesubsection}{1em}{}
+\titlespacing{\chapter}{0pt}{0pt}{20pt}
+\titlespacing{\section}{0pt}{12pt}{6pt}
+\titlespacing{\subsection}{0pt}{6pt}{3pt}
+
+% Настройка содержания: точечные лидеры между заголовками и номерами страниц
+\usepackage{tocloft}
+\renewcommand{\cftdotsep}{1}
+\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}}
+
+% Подключаем отдельные конфигурационные файлы для списков, формул, таблиц и изображений
+% \input{configs/config-lists.tex}
+\usepackage{enumitem}
+\setlist{nosep} % Убирает дополнительные отступы между элементами списков
+\setlist[itemize]{leftmargin=*, label=\textbullet}
+\setlist[enumerate]{leftmargin=*}
+%%%%%%%%%%%%%%
+% \input{configs/config-formulas.tex}
+\usepackage{amsmath}
+\numberwithin{equation}{chapter} % Формулы нумеруются по главам (например, (1.1), (1.2) и т.д.)
+%%%%%%%%%%%%%
+% \input{configs/config-tables.tex}
+% Подключаем нужные пакеты для таблиц и оформления
+\usepackage{booktabs}   % Для красивых горизонтальных линий (\toprule, \midrule, \bottomrule)
+\usepackage{multirow}   % Для объединения ячеек по вертикали
+\usepackage{caption}    % Для \ContinuedFloat (продолжение таблицы)
+
+% ------------------------
+% Шаблон: Многоуровневый заголовок
+% ------------------------
+\newcommand{\ExampleMultiLevelTable}{%
+\begin{table}[h!]
+\caption{Таблица 1 --- Пример построения таблицы}
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+\multirow{2}{*}{\textbf{Заголовок}} & \multicolumn{2}{c|}{\textbf{Заголовок колонки}} & \multirow{2}{*}{\textbf{Заголовок колонки}}\\
+\cline{2-3}
+& \textbf{Подзаголовок} & \textbf{Подзаголовок} & \\
+\hline
+A & B & C & D \\
+\hline
+\end{tabular}
+\end{table}
+}
+
+% Шаблон: "Разбитая" таблица (две части под одним номером)
+\newcommand{\ExampleSplitTable}{%
+  % --- Первая часть ---
+  \begin{table}[h!]
+    \LeftCaption
+    \caption{Таблица 5.1 --- Пример переноса таблицы} \\
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+    \textbf{Заголовок} & \textbf{Заголовок колонки} & \textbf{Заголовок колонки} & \textbf{Заголовок колонки} \\
+    \hline
+    1 & 2 & 3 & 4 \\
+    \hline
+    2 & 3 & 4 & 5 \\
+    \hline
+    \end{tabular}
+  \end{table}
+
+  % --- Продолжение ---
+  \begin{table}[h!]
+    \ContinuedFloat
+    \RightCaption
+    \caption*{Продолжение таблицы 5.1} \\
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+    \textbf{Заголовок} & \textbf{Заголовок колонки} & \textbf{Заголовок колонки} & \textbf{Заголовок колонки} \\
+    \hline
+    3 & 4 & 5 & 6 \\
+    \hline
+    4 & 5 & 6 & 7 \\
+    \hline
+    \end{tabular}
+  \end{table}
+}
+
+\usepackage{caption}
+\usepackage{longtable}
+\usepackage{etoolbox}
+
+% Настройка выравнивания заголовков
+\captionsetup[table]{justification=raggedright, singlelinecheck=false}
+
+%%%%%%%%%
+% \input{configs/config-images.tex}
+% Подключаем нужные пакеты для таблиц и оформления
+\usepackage{booktabs}   % Для красивых горизонтальных линий (\toprule, \midrule, \bottomrule)
+\usepackage{multirow}   % Для объединения ячеек по вертикали
+\usepackage{caption}    % Для \ContinuedFloat (продолжение таблицы)
+
+\usepackage{caption}
+\usepackage{longtable}
+\usepackage{etoolbox}
+
+% Настройка выравнивания заголовков
+\captionsetup[table]{justification=raggedright, singlelinecheck=false}
+
+% Переключатель для смены выравнивания заголовков
+\newcommand*\RightCaption{\captionsetup{justification=raggedleft}}
+\newcommand*\LeftCaption{\captionsetup{justification=raggedright}}
+%%%%%%%%%%%%
+
+% Дополнительные пакеты
+\usepackage[backend=biber,style=gost-numeric,sorting=none]{biblatex}
+% \addbibresource{bibliography.bib}
+\usepackage{booktabs}
+
+\usepackage{caption}
+\captionsetup[figure]{labelformat=empty}
+\captionsetup[table]{labelformat=empty}
+
+
