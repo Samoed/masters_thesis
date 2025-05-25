@@ -4,13 +4,17 @@
 \usepackage{setspace}
 % \usepackage{mathptmx}
 \onehalfspacing
+\usepackage[T2A]{fontenc}
+\renewcommand{\contentsname}{Содержание}
 
 % русские буквы
 \usepackage[utf8]{inputenc}
 \usepackage[T2A]{fontenc}
+
 \usepackage[main=russian,english]{babel}
 \newcommand{\MyTOC}{%
   \chapter*{СОДЕРЖАНИЕ}%
+  \setcounter{page}{6}
   \markboth{СОДЕРЖАНИЕ}{}%
   \vspace{-3.5cm}%
   {%
@@ -245,3 +249,62 @@
   inputencoding=utf8,
   extendedchars=true,
 }
+
+\usepackage[toc]{appendix}
+\usepackage{tocloft}
+\addto\captionsrussian{%
+  \renewcommand{\appendixname}{ПРИЛОЖЕНИЕ}% This is good practice
+}
+
+\makeatletter
+
+% Ваша команда \cyrtoc (оставляем как есть)
+\def\cyrtoc#1{\ifcase #1\or А\or Б\or В\or Г\or Д\or Е\or Ж\or И\or К\or Л\or М\or Н\or П\or Р\or С\or Т\or У\or Ф\or Х\or Ц\or Ш\or Щ\or Э\or Ю\or Я\else \@ctrerr \fi}
+
+\newcommand\originalappendix{}
+\let\originalappendix\appendix
+
+\renewcommand{\appendix}{%
+  \label{pg:end} % For referencing the last page number if needed
+  \originalappendix % Execute the original \appendix command (from appendix.sty with [toc] option)
+
+  % 1. Redefine chapter numbering for appendices
+  \renewcommand{\thechapter}{\cyrtoc{\value{chapter}}}
+  % \appendixname is set to "ПРИЛОЖЕНИЕ" for Russian via \addto\captionsrussian in preamble
+
+  % 2. Format chapter titles in the document body using 'titlesec'
+  \titleformat{\chapter}
+    {\Large\bfseries\centering}
+    {\MakeUppercase{\chaptertitlename}\ \thechapter} % \chaptertitlename becomes \appendixname
+    {4pt}
+    {}
+
+  % 3. Adjust TOC depth for appendices (if you only want chapter-level for apps)
+  \addtocontents{toc}{\protect\setcounter{tocdepth}{0}}
+
+  % 4. Customize Table of Contents entries for appendices using 'tocloft'
+  % This should now work correctly as titletoc isn't interfering for appendix chapters.
+  \ifdefined\cftchappresnum
+    \begingroup % Create a local group for \x
+      % \edef expands \appendixname *now* and stores its current value (e.g., "ПРИЛОЖЕНИЕ~")
+      % in \x's replacement text.
+      \edef\x{\endgroup % End the local group
+        % \noexpand prevents \renewcommand and \cftchappresnum from being expanded by \edef
+        \noexpand\renewcommand{\noexpand\cftchappresnum}{\appendixname~}% Define \cftchappresnum globally
+      }\x % Execute the \renewcommand stored in \x
+    % Now \cftchappresnum will expand directly to "ПРИЛОЖЕНИЕ~"
+
+    \renewcommand{\cftchapaftersnum}{} % Removes dot after "A" in "ПРИЛОЖЕНИЕ A"
+
+    % Adjust the width for "ПРИЛОЖЕНИЕ X " in the TOC number column
+    \newlength{\apptocnumwidth}
+    \settowidth{\apptocnumwidth}{\bfseries\cftchappresnum\cyrtoc{25}~} % Use \cyrtoc{25} for 'Я' (longest)
+    \renewcommand{\cftchapnumwidth}{\apptocnumwidth}
+
+  \else
+    \@latex@warning@no@line{Package 'tocloft' is not loaded.
+      TOC entries for appendices may not be formatted as intended.
+      Please add \string\usepackage{tocloft}\space to your preamble.}
+  \fi
+}
+\makeatother
