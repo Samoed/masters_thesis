@@ -273,38 +273,5 @@
   % \appendixname is set to "ПРИЛОЖЕНИЕ" for Russian via \addto\captionsrussian in preamble
 
   % 2. Format chapter titles in the document body using 'titlesec'
-  \titleformat{\chapter}
-    {\Large\bfseries\centering}
-    {\MakeUppercase{\chaptertitlename}\ \thechapter} % \chaptertitlename becomes \appendixname
-    {4pt}
-    {}
-
-  % 3. Adjust TOC depth for appendices (if you only want chapter-level for apps)
-  \addtocontents{toc}{\protect\setcounter{tocdepth}{0}}
-
-  % 4. Customize Table of Contents entries for appendices using 'tocloft'
-  % This should now work correctly as titletoc isn't interfering for appendix chapters.
-  \ifdefined\cftchappresnum
-    \begingroup % Create a local group for \x
-      % \edef expands \appendixname *now* and stores its current value (e.g., "ПРИЛОЖЕНИЕ~")
-      % in \x's replacement text.
-      \edef\x{\endgroup % End the local group
-        % \noexpand prevents \renewcommand and \cftchappresnum from being expanded by \edef
-        \noexpand\renewcommand{\noexpand\cftchappresnum}{\appendixname~}% Define \cftchappresnum globally
-      }\x % Execute the \renewcommand stored in \x
-    % Now \cftchappresnum will expand directly to "ПРИЛОЖЕНИЕ~"
-
-    \renewcommand{\cftchapaftersnum}{} % Removes dot after "A" in "ПРИЛОЖЕНИЕ A"
-
-    % Adjust the width for "ПРИЛОЖЕНИЕ X " in the TOC number column
-    \newlength{\apptocnumwidth}
-    \settowidth{\apptocnumwidth}{\bfseries\cftchappresnum\cyrtoc{25}~} % Use \cyrtoc{25} for 'Я' (longest)
-    \renewcommand{\cftchapnumwidth}{\apptocnumwidth}
-
-  \else
-    \@latex@warning@no@line{Package 'tocloft' is not loaded.
-      TOC entries for appendices may not be formatted as intended.
-      Please add \string\usepackage{tocloft}\space to your preamble.}
-  \fi
 }
 \makeatother
