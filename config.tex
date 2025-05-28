@@ -4,13 +4,14 @@
 \usepackage{setspace}
 % \usepackage{mathptmx}
 \onehalfspacing
-\usepackage[T2A]{fontenc}
-\renewcommand{\contentsname}{Содержание}
+\usepackage{cmap}
 
 % русские буквы
 \usepackage[utf8]{inputenc}
 \usepackage[T2A]{fontenc}
+\usepackage{svg}
 
+\renewcommand{\contentsname}{Содержание}
 \usepackage[main=russian,english]{babel}
 \newcommand{\MyTOC}{%
   \chapter*{СОДЕРЖАНИЕ}%
@@ -74,6 +75,7 @@
 \widowpenalty=10000   % Запрещаем разрыв страницы после последней строки абзаца
 
 \usepackage{color}
+\usepackage[svgnames]{xcolor}
 \usepackage{listings}
 
 \DeclareCaptionLabelSeparator{emdash}{\space---\space}  % пробел, длинное тире, пробел
