@@ -2,15 +2,20 @@
 \usepackage[a4paper,top=20mm,bottom=20mm,left=30mm,right=15mm]{geometry}
 % Межстрочный интервал 1.5 (14 пт рекомендуемый размер шрифта, можно задавать через документ или в настройках Overleaf)
 \usepackage{setspace}
+% \usepackage{mathptmx}
 \onehalfspacing
+\usepackage{cmap}
 
 % русские буквы
 \usepackage[utf8]{inputenc}
 \usepackage[T2A]{fontenc}
-\usepackage[main=russian,english]{babel}
+\usepackage{svg}
 
+\renewcommand{\contentsname}{Содержание}
+\usepackage[main=russian,english]{babel}
 \newcommand{\MyTOC}{%
   \chapter*{СОДЕРЖАНИЕ}%
+  \setcounter{page}{6}
   \markboth{СОДЕРЖАНИЕ}{}%
   \vspace{-3.5cm}%
   {%
@@ -60,83 +65,24 @@
 % Подключаем нужные пакеты для таблиц и оформления
 \usepackage{booktabs}   % Для красивых горизонтальных линий (\toprule, \midrule, \bottomrule)
 \usepackage{multirow}   % Для объединения ячеек по вертикали
+\usepackage{float}
 \usepackage{caption}    % Для \ContinuedFloat (продолжение таблицы)
-
-% ------------------------
-% Шаблон: Многоуровневый заголовок
-% ------------------------
-\newcommand{\ExampleMultiLevelTable}{%
-\begin{table}[h!]
-\caption{Таблица 1 --- Пример построения таблицы}
-\centering
-\begin{tabular}{|c|c|c|c|}
-\hline
-\multirow{2}{*}{\textbf{Заголовок}} & \multicolumn{2}{c|}{\textbf{Заголовок колонки}} & \multirow{2}{*}{\textbf{Заголовок колонки}}\\
-\cline{2-3}
-& \textbf{Подзаголовок} & \textbf{Подзаголовок} & \\
-\hline
-A & B & C & D \\
-\hline
-\end{tabular}
-\end{table}
-}
-
-% Шаблон: "Разбитая" таблица (две части под одним номером)
-\newcommand{\ExampleSplitTable}{%
-  % --- Первая часть ---
-  \begin{table}[h!]
-    \LeftCaption
-    \caption{Таблица 5.1 --- Пример переноса таблицы} \\
-    \centering
-    \begin{tabular}{|c|c|c|c|}
-    \hline
-    \textbf{Заголовок} & \textbf{Заголовок колонки} & \textbf{Заголовок колонки} & \textbf{Заголовок колонки} \\
-    \hline
-    1 & 2 & 3 & 4 \\
-    \hline
-    2 & 3 & 4 & 5 \\
-    \hline
-    \end{tabular}
-  \end{table}
-
-  % --- Продолжение ---
-  \begin{table}[h!]
-    \ContinuedFloat
-    \RightCaption
-    \caption*{Продолжение таблицы 5.1} \\
-    \centering
-    \begin{tabular}{|c|c|c|c|}
-    \hline
-    \textbf{Заголовок} & \textbf{Заголовок колонки} & \textbf{Заголовок колонки} & \textbf{Заголовок колонки} \\
-    \hline
-    3 & 4 & 5 & 6 \\
-    \hline
-    4 & 5 & 6 & 7 \\
-    \hline
-    \end{tabular}
-  \end{table}
-}
-
-\usepackage{caption}
 \usepackage{longtable}
 \usepackage{etoolbox}
 
+\sloppy   % Избавляемся от переполнений
+\clubpenalty=10000    % Запрещаем разрыв страницы после первой строки абзаца
+\widowpenalty=10000   % Запрещаем разрыв страницы после последней строки абзаца
+
+\usepackage{color}
+\usepackage[svgnames]{xcolor}
+\usepackage{listings}
+
+\DeclareCaptionLabelSeparator{emdash}{\space---\space}  % пробел, длинное тире, пробел
+
+\captionsetup[table]{position=t, singlelinecheck=false, justification=raggedright, labelsep=emdash, name=Таблица}
+\captionsetup[figure]{position=b, singlelinecheck=false, labelsep=emdash, justification=centering, name=Рисунок}
 % Настройка выравнивания заголовков
-\captionsetup[table]{justification=raggedright, singlelinecheck=false}
-
-%%%%%%%%%
-% \input{configs/config-images.tex}
-% Подключаем нужные пакеты для таблиц и оформления
-\usepackage{booktabs}   % Для красивых горизонтальных линий (\toprule, \midrule, \bottomrule)
-\usepackage{multirow}   % Для объединения ячеек по вертикали
-\usepackage{caption}    % Для \ContinuedFloat (продолжение таблицы)
-
-\usepackage{caption}
-\usepackage{longtable}
-\usepackage{etoolbox}
-
-% Настройка выравнивания заголовков
-\captionsetup[table]{justification=raggedright, singlelinecheck=false}
 
 % Переключатель для смены выравнивания заголовков
 \newcommand*\RightCaption{\captionsetup{justification=raggedleft}}
@@ -145,11 +91,189 @@ A & B & C & D \\
 
 % Дополнительные пакеты
 \usepackage[backend=biber,style=gost-numeric,sorting=none]{biblatex}
-% \addbibresource{bibliography.bib}
 \usepackage{booktabs}
 
-\usepackage{caption}
-\captionsetup[figure]{labelformat=empty}
-\captionsetup[table]{labelformat=empty}
+\newcommand\YAMLcolonstyle{\color{red}\mdseries}
+\newcommand\YAMLkeystyle{\color{black}\bfseries}
+\newcommand\YAMLvaluestyle{\color{blue}\mdseries}
 
+\makeatletter
 
+\newcommand\language@yaml{yaml}
+
+\expandafter\expandafter\expandafter\lstdefinelanguage
+\expandafter{\language@yaml}
+{
+  keywords={true,false,null,y,n},
+  keywordstyle=\color{darkgray}\bfseries,
+  basicstyle=\YAMLkeystyle\small,                                 % assuming a key comes first
+  sensitive=false,
+  comment=[l]{\#},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\YAMLvaluestyle\ttfamily,
+  moredelim=[l][\color{orange}]{\&},
+  moredelim=[l][\color{magenta}]{*},
+  moredelim=**[il][\YAMLcolonstyle{:}\YAMLvaluestyle]{:},   % switch to value style at :
+  morestring=[b]',
+  morestring=[b]",
+  literate =    {---}{{\ProcessThreeDashes}}3
+                {>}{{\textcolor{red}\textgreater}}1
+                {|}{{\textcolor{red}\textbar}}1
+                {\ -\ }{{\mdseries\ -\ }}3,
+}
+
+% switch to key style at EOL
+\lst@AddToHook{EveryLine}{\ifx\lst@language\language@yaml\YAMLkeystyle\fi}
+\makeatother
+
+\newcommand\ProcessThreeDashes{\llap{\color{cyan}\mdseries-{-}-}}
+%%%%% Listing %%%%
+%New colors defined below
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\definecolor{whitesmoke}{rgb}{0.96, 0.96, 0.96}
+
+\lstdefinestyle{listingstyle}{
+  backgroundcolor=\color{backcolour},
+  commentstyle=\color{codegreen},
+  keywordstyle=\color{magenta},
+  numberstyle=\tiny\color{codegray},
+  stringstyle=\color{codepurple},
+  basicstyle=\ttfamily\footnotesize,
+  breakatwhitespace=false,
+  breaklines=true,
+  captionpos=b,
+  keepspaces=true,
+  numbers=left,
+  numbersep=5pt,
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=4,
+  inputencoding=utf8,
+  extendedchars=true,
+  literate=
+    {а}{{\cyra}}1
+    {б}{{\cyrb}}1
+    {в}{{\cyrv}}1
+    {г}{{\cyrg}}1
+    {д}{{\cyrd}}1
+    {е}{{\cyre}}1
+    {ё}{\"{\cyre}}1
+    {ж}{{\cyrzh}}1
+    {з}{{\cyrz}}1
+    {и}{{\cyri}}1
+    {й}{{\cyrishrt}}1
+    {к}{{\cyrk}}1
+    {л}{{\cyrl}}1
+    {м}{{\cyrm}}1
+    {н}{{\cyrn}}1
+    {о}{{\cyro}}1
+    {п}{{\cyrp}}1
+    {р}{{\cyrr}}1
+    {с}{{\cyrs}}1
+    {т}{{\cyrt}}1
+    {у}{{\cyru}}1
+    {ф}{{\cyrf}}1
+    {х}{{\cyrh}}1
+    {ц}{{\cyrc}}1
+    {ч}{{\cyrch}}1
+    {ш}{{\cyrsh}}1
+    {щ}{{\cyrshch}}1
+    {ъ}{{\cyrhrdsn}}1
+    {ы}{{\cyrery}}1
+    {ь}{{\cyrsftsn}}1
+    {э}{{\cyrerev}}1
+    {ю}{{\cyryu}}1
+    {я}{{\cyrya}}1
+    {А}{{\CYRA}}1
+    {Б}{{\CYRB}}1
+    {В}{{\CYRV}}1
+    {Г}{{\CYRG}}1
+    {Д}{{\CYR96}}1
+    {Е}{{\CYRE}}1
+    {Ё}{{\"{\CYRE}}}1
+    {Ж}{{\CYRZH}}1
+    {З}{{\CYRZ}}1
+    {И}{{\CYRI}}1
+    {Й}{{\CYRISHRT}}1
+    {К}{{\CYRK}}1
+    {Л}{{\CYRL}}1
+    {М}{{\CYRM}}1
+    {Н}{{\CYRN}}1
+    {О}{{\CYRO}}1
+    {П}{{\CYRP}}1
+    {Р}{{\CYRR}}1
+    {С}{{\CYRS}}1
+    {Т}{{\CYRT}}1
+    {У}{{\CYRU}}1
+    {Ф}{{\CYRF}}1
+    {Х}{{\CYRH}}1
+    {Ц}{{\CYRC}}1
+    {Ч}{{\CYRCH}}1
+    {Ш}{{\CYRSH}}1
+    {Щ}{{\CYRSHCH}}1
+    {Ъ}{{\CYRHRDSN}}1
+    {Ы}{{\CYRERY}}1
+    {Ь}{{\CYRSFTSN}}1
+    {Э}{{\CYREREV}}1
+    {Ю}{{\CYRYU}}1
+    {Я}{{\CYRYA}}1
+}
+\lstset{style=listingstyle} % для красивых листингов
+%% Оформление подписей к листингам в стандарте вышки
+\DeclareCaptionFormat{modifiedlst}{\lstlistingname~\thelstlisting~--~#3}
+\captionsetup[lstlisting]{format=modifiedlst}
+
+% Если язык не поддерживается (например, js) можно добавить свой https://tex.stackexchange.com/questions/89574/language-option-supported-in-listings
+% или воспользоваться функцией без выделения синтаксиса через \lstset{style=listingstyle}
+\lstdefinestyle{monochromestyle}{
+  backgroundcolor=\color{whitesmoke},
+  extendedchars=true,
+  basicstyle=\footnotesize\ttfamily,
+  showstringspaces=false,
+  showspaces=false,
+  numberstyle=\footnotesize,
+  numbersep=9pt,
+  breakatwhitespace=false,
+  breaklines=true,
+  captionpos=b,
+  keepspaces=true,
+  numbers=left,
+  numbersep=5pt,
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=4,
+  inputencoding=utf8,
+  extendedchars=true,
+}
+
+\usepackage[toc]{appendix}
+\usepackage{tocloft}
+\addto\captionsrussian{%
+  \renewcommand{\appendixname}{ПРИЛОЖЕНИЕ}% This is good practice
+}
+
+\makeatletter
+
+% Ваша команда \cyrtoc (оставляем как есть)
+\def\cyrtoc#1{\ifcase #1\or А\or Б\or В\or Г\or Д\or Е\or Ж\or И\or К\or Л\or М\or Н\or П\or Р\or С\or Т\or У\or Ф\or Х\or Ц\or Ш\or Щ\or Э\or Ю\or Я\else \@ctrerr \fi}
+
+\newcommand\originalappendix{}
+\let\originalappendix\appendix
+
+\renewcommand{\appendix}{%
+  \label{pg:end} % For referencing the last page number if needed
+  \originalappendix % Execute the original \appendix command (from appendix.sty with [toc] option)
+
+  % 1. Redefine chapter numbering for appendices
+  \renewcommand{\thechapter}{\cyrtoc{\value{chapter}}}
+  % \appendixname is set to "ПРИЛОЖЕНИЕ" for Russian via \addto\captionsrussian in preamble
+
+  % 2. Format chapter titles in the document body using 'titlesec'
+}
+\makeatother
